@@ -10,7 +10,7 @@ import keyboard
 
 from PyQt5.QtCore import *
 from base64 import b64encode
-from python_imagesearch.imagesearch import imagesearch
+from python_imagesearch.imagesearch import imagesearch, r
 
 import warnings
 warnings.simplefilter("ignore", UserWarning)
@@ -24,6 +24,7 @@ class LOL_LINE(QThread):
         super(LOL_LINE, self).__init__(parent)
         self.game = False
         self.working = True
+        self.ready = False
         self.ui = ui
 
     def lockfile(self):
@@ -67,16 +68,16 @@ class LOL_LINE(QThread):
                 self.game = False
             elif self.game == True and status != "Lobby":
                 continue
-            ready = False
             if status == "Lobby":
-                ready = True
+                self.ready = True
                 lobby = self.request('get', '/lol-lobby/v2/lobby').json()
-            if ready == False:
+            if self.ready == False:
                 continue
             chat_box_img, connecting_img = utility.path("./Source/chat_box.PNG"), utility.path("./Source/connect.PNG")
             chat_box = imagesearch(chat_box_img, 0.8)
             if status == "ChampSelect" and lobby["gameConfig"]["gameMode"] == "CLASSIC" and not lobby["gameConfig"]["showPositionSelector"]:
                 self.game = True
+                self.ready = False
                 connecting = imagesearch(connecting_img, 0.8)
                 while not connecting[0] == -1:
                     connecting = imagesearch(connecting_img, 0.8)

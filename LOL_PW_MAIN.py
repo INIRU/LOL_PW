@@ -13,7 +13,7 @@ from PyQt5 import uic
 
 # 메인 화면
 class LOL_PW_MAIN(QMainWindow, uic.loadUiType(utility.path("LOL_PW.ui"))[0]):
-    __version__ = "0.0.1"
+    __version__ = "0.0.2"
 
     def closeEvent(self, QCloseEvent):
         self.status = False
